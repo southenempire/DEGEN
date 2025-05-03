@@ -1,22 +1,37 @@
 /* wallet-override-bw-theme.css */
 
-/* Main Modal Container */
+/* Original Code */
+@media (max-width: 480px) {
+    .wallet-adapter-modal-wrapper {
+        padding: 1.5rem !important;
+        margin: 0 1rem !important;
+        max-width: calc(100% - 2rem) !important;
+    }
+}
+
+
+
+/* Updated Code with Fallbacks */
 .wallet-adapter-modal-overlay {
     background-color: rgba(0, 0, 0, 0.5) !important;
-    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px); /* Safari */
+    backdrop-filter: blur(4px); /* Modern browsers */
+    filter: opacity(0.9); /* Fallback for older browsers */
 }
 
-.wallet-adapter-modal-wrapper {
-    background-color: #fff !important;
-    padding: 2rem !important;
-    border-radius: 0.75rem !important;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
-    max-width: 28rem !important;
-    width: 100% !important;
-    border: 1px solid #e5e7eb !important;
-    position: relative !important;
-}
+/* Updated Code with Fallbacks */
+@media (max-width: 480px) {
+    .wallet-adapter-modal-wrapper {
+        padding: 1.5rem !important;
+        margin: 0 1rem !important;
+        max-width: calc(100% - 2rem) !important;
+        width: 100%;
+    }
 
+    .wallet-adapter-modal-wrapper * {
+        box-sizing: border-box; /* Ensure consistent sizing for all elements */
+    }
+}
 /* Close Button */
 .wallet-adapter-modal-button-close {
     position: absolute !important;
