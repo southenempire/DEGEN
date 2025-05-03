@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { fetchSolanaValidators } from './web3plugin/validators';
 import { Shield, Copy, Check, ExternalLink, ArrowRight } from 'lucide-react';
 
@@ -21,7 +20,7 @@ const ValidatorsList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copiedAddress, setCopiedAddress] = useState<string | null>(null);
-  const navigate = useNavigate();
+  /*const navigate = useNavigate();*/
 
   useEffect(() => {
     const fetchValidators = async () => {
@@ -53,17 +52,30 @@ const ValidatorsList = () => {
       : 'bg-green-900/30 text-green-400 border-green-800';
   };
 
-  const copyToClipboard = (address: string, e: React.MouseEvent) => {
+  
+const copyToClipboard = (address: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    navigator.clipboard.writeText(address);
-    setCopiedAddress(address);
-    setTimeout(() => setCopiedAddress(null), 2000);
-  };
-
-  const handleValidatorClick = (validator: Validator) => {
-    navigate(`/validator/${encodeURIComponent(validator.nodePubkey)}`);
-  };
-
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(address).then(() => {
+            setCopiedAddress(address);
+            setTimeout(() => setCopiedAddress(null), 2000);
+        }).catch((err) => console.error('Clipboard copy failed', err));
+    } else {
+        // Fallback for unsupported browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = address;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            setCopiedAddress(address);
+            setTimeout(() => setCopiedAddress(null), 2000);
+        } catch (err) {
+            console.error('Fallback copy failed', err);
+        }
+        document.body.removeChild(textArea);
+    }
+};
   if (loading) {
     return (
       <div className="bg-gray-900 text-gray-100 min-h-screen p-6">
@@ -113,6 +125,11 @@ const ValidatorsList = () => {
         </div>
       </div>
     );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  function handleValidatorClick(_validator: Validator): void {
+    throw new Error('Function not implemented.');
   }
 
   return (
